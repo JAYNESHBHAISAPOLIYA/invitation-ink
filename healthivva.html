@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEALTHIVVA™ — Nature's Choice Premium Chickpeas</title>
+  <meta name="description" content="HEALTHIVVA - Nature's Choice. Premium Chickpeas &amp; Chana. Nature's Finest, Packed with Goodness." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #1B4D1E;
+      --secondary: #5CB83A;
+      --bg-dark: #0D2B0F;
+      --accent-gold: #D4A017;
+      --text-light: #F5F0E0;
+      --card-bg: #132E14;
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+    @media (pointer: fine) {
+      body { cursor: none; }
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ===== CUSTOM CURSOR ===== */
+    .cursor-dot {
+      width: 8px; height: 8px;
+      background: var(--secondary);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.1s;
+    }
+    .cursor-ring {
+      width: 40px; height: 40px;
+      border: 2px solid rgba(92, 184, 58, 0.5);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 10000;
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+      box-shadow: 0 0 20px rgba(92, 184, 58, 0.3);
+    }
+    .cursor-ring.hover {
+      width: 60px; height: 60px;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 30px rgba(212, 160, 23, 0.4);
+    }
+
+    /* ===== PRELOADER ===== */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .preloader-logo {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--secondary);
+      letter-spacing: 0.15em;
+      opacity: 0;
+    }
+    .preloader-sub {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--accent-gold);
+      letter-spacing: 0.3em;
+      margin-top: 10px;
+      opacity: 0;
+    }
+    .preloader-bar {
+      width: 200px;
+      height: 2px;
+      background: rgba(92, 184, 58, 0.2);
+      margin-top: 30px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .preloader-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--secondary), var(--accent-gold));
+      border-radius: 2px;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: radial-gradient(ellipse at center, #132E14 0%, var(--bg-dark) 70%);
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      pointer-events: none;
+    }
+    .hero-brand {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      color: var(--text-light);
+      overflow: hidden;
+    }
+    .hero-brand .letter {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(80px) rotateX(90deg);
+    }
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: clamp(0.9rem, 2vw, 1.3rem);
+      color: var(--accent-gold);
+      letter-spacing: 0.25em;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+    .hero-tagline-inner {
+      opacity: 0;
+    }
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-size: clamp(1rem, 2.2vw, 1.5rem);
+      color: rgba(245, 240, 224, 0.7);
+      margin-top: 24px;
+      font-weight: 300;
+    }
+    .hero-subtitle .typewriter {
+      border-right: 2px solid var(--secondary);
+      padding-right: 4px;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+    }
+    .scroll-indicator span {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: rgba(245, 240, 224, 0.5);
+    }
+    .scroll-mouse {
+      width: 24px; height: 38px;
+      border: 2px solid rgba(245, 240, 224, 0.4);
+      border-radius: 12px;
+      position: relative;
+    }
+    .scroll-mouse::after {
+      content: '';
+      width: 4px; height: 8px;
+      background: var(--secondary);
+      border-radius: 2px;
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: scrollBounce 2s infinite;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      50% { transform: translateX(-50%) translateY(12px); opacity: 0.3; }
+    }
+
+    /* ===== BRAND STORY SECTION ===== */
+    .brand-story {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--bg-dark);
+    }
+    .brand-story-heading {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+    .brand-story-heading h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--text-light);
+    }
+    .brand-story-heading h2 span {
+      color: var(--secondary);
+    }
+    .horizontal-wrapper {
+      display: flex;
+      width: 400%;
+      flex-wrap: nowrap;
+    }
+    .hs-panel {
+      width: 100vw;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      flex-shrink: 0;
+    }
+    .hs-panel-inner {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      max-width: 1100px;
+      width: 100%;
+    }
+    .hs-visual {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .hs-visual .big-emoji {
+      font-size: clamp(6rem, 12vw, 10rem);
+      filter: drop-shadow(0 0 40px rgba(92, 184, 58, 0.3));
+    }
+    .hs-text {
+      flex: 1;
+    }
+    .hs-text h3 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+    .hs-text p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(245, 240, 224, 0.7);
+      margin-bottom: 20px;
+    }
+    .counter-row {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .counter-item {
+      text-align: center;
+    }
+    .counter-num {
+      font-family: var(--font-heading);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .counter-label {
+      font-size: 0.85rem;
+      color: rgba(245, 240, 224, 0.6);
+      margin-top: 4px;
+    }
+
+    /* ===== PRODUCT SHOWCASE ===== */
+    .products {
+      position: relative;
+      width: 100%;
+      padding: 100px 20px;
+      background: linear-gradient(180deg, var(--bg-dark) 0%, #0a1f0b 100%);
+    }
+    .section-heading {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-heading h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--text-light);
+    }
+    .section-heading h2 .accent { color: var(--secondary); }
+    .section-heading p {
+      font-size: 1.1rem;
+      color: rgba(245, 240, 224, 0.6);
+      margin-top: 12px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .product-card {
+      perspective: 1000px;
+      height: 440px;
+      cursor: pointer;
+    }
+    .product-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .product-card:hover .product-card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .card-front {
+      background: var(--card-bg);
+      border: 1px solid rgba(92, 184, 58, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 30px;
+      text-align: center;
+      transition: box-shadow 0.4s;
+    }
+    .product-card:hover .card-front {
+      box-shadow: 0 0 50px rgba(92, 184, 58, 0.2);
+    }
+    .card-front .product-emoji {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 20px rgba(92, 184, 58, 0.4));
+    }
+    .card-front h3 {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    .card-front .product-tag {
+      display: inline-block;
+      background: rgba(92, 184, 58, 0.15);
+      color: var(--secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .card-front .product-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(245, 240, 224, 0.6);
+    }
+    .card-front .product-price {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-top: 16px;
+    }
+    .card-back {
+      background: linear-gradient(135deg, var(--primary), var(--card-bg));
+      border: 1px solid rgba(92, 184, 58, 0.25);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+    }
+    .card-back h4 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--accent-gold);
+      margin-bottom: 20px;
+    }
+    .nutrition-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+    .nutrition-item {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(92, 184, 58, 0.1);
+    }
+    .nutrition-item .nval {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+    .nutrition-item .nlabel {
+      font-size: 0.75rem;
+      color: rgba(245, 240, 224, 0.6);
+      margin-top: 2px;
+    }
+    .card-back .flip-hint {
+      font-size: 0.8rem;
+      color: rgba(245, 240, 224, 0.4);
+      margin-top: 20px;
+    }
+
+    /* ===== WHY HEALTHIVVA (Parallax Section) ===== */
+    .why-section {
+      position: relative;
+      width: 100%;
+      padding: 120px 20px;
+      background: var(--bg-dark);
+      overflow: hidden;
+    }
+    .bokeh-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bokeh {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(92, 184, 58, 0.25), transparent 70%);
+      animation: floatBokeh 8s infinite ease-in-out;
+    }
+    @keyframes floatBokeh {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.1); }
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .pillar {
+      text-align: center;
+      padding: 50px 30px;
+      background: rgba(19, 46, 20, 0.6);
+      border: 1px solid rgba(92, 184, 58, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.4s, box-shadow 0.4s;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .pillar:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(92, 184, 58, 0.15);
+    }
+    .pillar-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .pillar h3 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    .pillar p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(245, 240, 224, 0.6);
+    }
+
+    /* ===== NUTRITION FACTS ===== */
+    .nutrition-section {
+      position: relative;
+      width: 100%;
+      padding: 120px 20px;
+      background: linear-gradient(180deg, #0a1f0b, var(--bg-dark));
+    }
+    .nutrition-charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .chart-item {
+      text-align: center;
+    }
+    .chart-svg {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .chart-svg svg {
+      transform: rotate(-90deg);
+    }
+    .chart-svg .track {
+      fill: none;
+      stroke: rgba(92, 184, 58, 0.1);
+      stroke-width: 8;
+    }
+    .chart-svg .fill {
+      fill: none;
+      stroke: url(#greenGrad);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408;
+      transition: stroke-dashoffset 1.5s ease;
+    }
+    .chart-value {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+    .chart-label {
+      font-size: 1rem;
+      color: var(--text-light);
+      margin-top: 12px;
+      font-weight: 600;
+    }
+    .chart-sub {
+      font-size: 0.85rem;
+      color: rgba(245, 240, 224, 0.5);
+      margin-top: 4px;
+    }
+
+    /* ===== FARM TO TABLE TIMELINE ===== */
+    .timeline-section {
+      position: relative;
+      width: 100%;
+      padding: 120px 20px;
+      background: var(--bg-dark);
+      overflow: hidden;
+    }
+    .timeline-track {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-top: 40px;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 68px;
+      left: 5%;
+      width: 90%;
+      height: 3px;
+      background: rgba(92, 184, 58, 0.1);
+    }
+    .timeline-line-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--secondary), var(--accent-gold));
+      border-radius: 2px;
+      transition: width 0.1s;
+    }
+    .timeline-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .timeline-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--card-bg);
+      border: 2px solid rgba(92, 184, 58, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin: 0 auto 12px;
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+    .timeline-step.active .timeline-icon {
+      border-color: var(--secondary);
+      box-shadow: 0 0 25px rgba(92, 184, 58, 0.3);
+    }
+    .timeline-step h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+    .timeline-step p {
+      font-size: 0.8rem;
+      color: rgba(245, 240, 224, 0.5);
+      padding: 0 5px;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials {
+      position: relative;
+      width: 100%;
+      padding: 120px 20px;
+      background: linear-gradient(180deg, var(--bg-dark), #0a1f0b);
+      overflow: hidden;
+    }
+    .testimonial-track {
+      display: flex;
+      gap: 30px;
+      max-width: 1100px;
+      margin: 0 auto;
+      perspective: 1000px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .testimonial-card {
+      flex: 0 0 320px;
+      background: var(--card-bg);
+      border: 1px solid rgba(92, 184, 58, 0.12);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      transition: transform 0.5s, box-shadow 0.5s;
+      opacity: 0;
+      transform: translateY(30px) rotateX(5deg);
+    }
+    .testimonial-card:hover {
+      transform: translateY(-5px) rotateX(0);
+      box-shadow: 0 20px 50px rgba(92, 184, 58, 0.12);
+    }
+    .testimonial-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 3px solid var(--secondary);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      background: rgba(92, 184, 58, 0.1);
+      box-shadow: 0 0 20px rgba(92, 184, 58, 0.2);
+    }
+    .testimonial-stars {
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      margin-bottom: 12px;
+    }
+    .testimonial-card blockquote {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: rgba(245, 240, 224, 0.75);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .testimonial-card .tname {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+    .testimonial-card .tlocation {
+      font-size: 0.8rem;
+      color: rgba(245, 240, 224, 0.4);
+      margin-top: 2px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-section {
+      background: var(--primary);
+      padding: 80px 20px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .footer-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+    }
+    .footer-logo {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+    }
+    .footer-logo span { color: var(--secondary); }
+    .footer-tagline {
+      font-size: 0.95rem;
+      color: var(--accent-gold);
+      letter-spacing: 0.2em;
+      margin-top: 8px;
+    }
+    .footer-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--secondary), var(--accent-gold));
+      margin: 30px auto;
+      border-radius: 2px;
+    }
+    .footer-tagline2 {
+      font-size: 1.1rem;
+      color: rgba(245, 240, 224, 0.7);
+      margin-bottom: 30px;
+    }
+    .social-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .social-link {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(245, 240, 224, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .social-link:hover {
+      border-color: var(--secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(92, 184, 58, 0.2);
+    }
+    .footer-bottom {
+      font-size: 0.8rem;
+      color: rgba(245, 240, 224, 0.35);
+      padding-top: 20px;
+      border-top: 1px solid rgba(245, 240, 224, 0.08);
+    }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .cursor-dot, .cursor-ring { display: none; }
+      body { cursor: auto; }
+      .hs-panel-inner {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+      }
+      .counter-row { justify-content: center; }
+      .products-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+      .pillars-grid { grid-template-columns: 1fr 1fr; }
+      .timeline-track { flex-wrap: wrap; gap: 20px; }
+      .timeline-line { display: none; }
+      .testimonial-track { flex-direction: column; align-items: center; }
+      .testimonial-card { flex: 0 0 auto; width: 100%; max-width: 360px; }
+    }
+    @media (max-width: 480px) {
+      .pillars-grid { grid-template-columns: 1fr; }
+      .nutrition-charts { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-logo" id="preloaderLogo">HEALTHIVVA</div>
+    <div class="preloader-sub" id="preloaderSub">NATURE'S CHOICE</div>
+    <div class="preloader-bar">
+      <div class="preloader-bar-fill" id="preloaderBar"></div>
+    </div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ============ HERO SECTION ============ -->
+  <section class="hero" id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <h1 class="hero-brand" id="heroBrand" aria-label="HEALTHIVVA">
+        <span class="letter">H</span><span class="letter">E</span><span class="letter">A</span><span class="letter">L</span><span class="letter">T</span><span class="letter">H</span><span class="letter">I</span><span class="letter">V</span><span class="letter">V</span><span class="letter">A</span>
+      </h1>
+      <div class="hero-tagline">
+        <div class="hero-tagline-inner" id="heroTagline">NATURE'S CHOICE</div>
+      </div>
+      <p class="hero-subtitle">
+        <span class="typewriter" id="typewriter"></span>
+      </p>
+    </div>
+    <div class="scroll-indicator" id="scrollIndicator">
+      <div class="scroll-mouse"></div>
+      <span>SCROLL TO EXPLORE</span>
+    </div>
+  </section>
+
+  <!-- ============ BRAND STORY ============ -->
+  <section class="brand-story" id="brandStory">
+    <div class="brand-story-heading">
+      <h2>From <span>Farm</span> to Your Kitchen</h2>
+    </div>
+    <div class="horizontal-wrapper" id="horizontalWrapper">
+      <!-- Panel 1 -->
+      <div class="hs-panel">
+        <div class="hs-panel-inner">
+          <div class="hs-visual"><span class="big-emoji">🌱</span></div>
+          <div class="hs-text">
+            <h3>Rooted in Tradition</h3>
+            <p>For over five decades, HEALTHIVVA has been partnering with local farmers across India's heartland to source the finest chickpeas. Our legacy is built on trust, quality, and a deep respect for nature's bounty.</p>
+            <div class="counter-row">
+              <div class="counter-item">
+                <div class="counter-num" data-target="50">0</div>
+                <div class="counter-label">Years of Trust</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-num" data-target="100">0</div>
+                <div class="counter-label">% Natural</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-num" data-target="0" data-text="Zero">0</div>
+                <div class="counter-label">Additives</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Panel 2 -->
+      <div class="hs-panel">
+        <div class="hs-panel-inner">
+          <div class="hs-visual"><span class="big-emoji">🌾</span></div>
+          <div class="hs-text">
+            <h3>Hand-Selected Quality</h3>
+            <p>Every single chickpea is hand-selected and passes through a rigorous 8-step quality check. We reject anything that doesn't meet our exacting standards — because your family deserves only the best.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Panel 3 -->
+      <div class="hs-panel">
+        <div class="hs-panel-inner">
+          <div class="hs-visual"><span class="big-emoji">🏭</span></div>
+          <div class="hs-text">
+            <h3>Modern Processing</h3>
+            <p>State-of-the-art, FSSAI-certified processing facilities ensure every grain retains its natural nutrition and flavor. Temperature-controlled cleaning, sorting, and packaging — all under one roof.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Panel 4 -->
+      <div class="hs-panel">
+        <div class="hs-panel-inner">
+          <div class="hs-visual"><span class="big-emoji">🍽️</span></div>
+          <div class="hs-text">
+            <h3>On Your Table</h3>
+            <p>From our farms to your kitchen — sealed in premium packaging that locks in freshness. Cook with confidence knowing every bite carries the goodness nature intended.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCT SHOWCASE ============ -->
+  <section class="products" id="products">
+    <div class="section-heading">
+      <h2>Our <span class="accent">Premium</span> Range</h2>
+      <p>Hover on a card to discover nutrition facts</p>
+    </div>
+    <div class="products-grid">
+      <!-- Kabuli Chana -->
+      <div class="product-card">
+        <div class="product-card-inner">
+          <div class="card-front">
+            <div class="product-emoji">🫘</div>
+            <span class="product-tag">PREMIUM</span>
+            <h3>Kabuli Chana</h3>
+            <p class="product-desc">Large, creamy-white chickpeas perfect for curries, salads, and hummus. Sourced from the finest farms of Rajasthan.</p>
+            <div class="product-price">₹180 <span style="font-size:0.7em; font-weight:400; color:rgba(245,240,224,0.5)">/ 1kg</span></div>
+          </div>
+          <div class="card-back">
+            <h4>Nutrition per 100g</h4>
+            <div class="nutrition-grid">
+              <div class="nutrition-item"><div class="nval">20g</div><div class="nlabel">Protein</div></div>
+              <div class="nutrition-item"><div class="nval">12g</div><div class="nlabel">Fiber</div></div>
+              <div class="nutrition-item"><div class="nval">61g</div><div class="nlabel">Carbs</div></div>
+              <div class="nutrition-item"><div class="nval">6g</div><div class="nlabel">Fat</div></div>
+              <div class="nutrition-item"><div class="nval">4.3mg</div><div class="nlabel">Iron</div></div>
+              <div class="nutrition-item"><div class="nval">105mg</div><div class="nlabel">Calcium</div></div>
+            </div>
+            <div class="flip-hint">Hover to flip back</div>
+          </div>
+        </div>
+      </div>
+      <!-- Desi Chana -->
+      <div class="product-card">
+        <div class="product-card-inner">
+          <div class="card-front">
+            <div class="product-emoji">🌰</div>
+            <span class="product-tag">CLASSIC</span>
+            <h3>Desi Chana</h3>
+            <p class="product-desc">Smaller, nuttier chickpeas with a richer flavor. The staple of Indian kitchens for authentic chana masala.</p>
+            <div class="product-price">₹140 <span style="font-size:0.7em; font-weight:400; color:rgba(245,240,224,0.5)">/ 1kg</span></div>
+          </div>
+          <div class="card-back">
+            <h4>Nutrition per 100g</h4>
+            <div class="nutrition-grid">
+              <div class="nutrition-item"><div class="nval">22g</div><div class="nlabel">Protein</div></div>
+              <div class="nutrition-item"><div class="nval">15g</div><div class="nlabel">Fiber</div></div>
+              <div class="nutrition-item"><div class="nval">58g</div><div class="nlabel">Carbs</div></div>
+              <div class="nutrition-item"><div class="nval">5g</div><div class="nlabel">Fat</div></div>
+              <div class="nutrition-item"><div class="nval">5.1mg</div><div class="nlabel">Iron</div></div>
+              <div class="nutrition-item"><div class="nval">115mg</div><div class="nlabel">Calcium</div></div>
+            </div>
+            <div class="flip-hint">Hover to flip back</div>
+          </div>
+        </div>
+      </div>
+      <!-- Mixed Pulses -->
+      <div class="product-card">
+        <div class="product-card-inner">
+          <div class="card-front">
+            <div class="product-emoji">🥣</div>
+            <span class="product-tag">SIGNATURE</span>
+            <h3>Mixed Pulses</h3>
+            <p class="product-desc">A curated blend of premium chickpeas and pulses — the perfect pantry companion for wholesome daily meals.</p>
+            <div class="product-price">₹160 <span style="font-size:0.7em; font-weight:400; color:rgba(245,240,224,0.5)">/ 1kg</span></div>
+          </div>
+          <div class="card-back">
+            <h4>Nutrition per 100g</h4>
+            <div class="nutrition-grid">
+              <div class="nutrition-item"><div class="nval">24g</div><div class="nlabel">Protein</div></div>
+              <div class="nutrition-item"><div class="nval">14g</div><div class="nlabel">Fiber</div></div>
+              <div class="nutrition-item"><div class="nval">55g</div><div class="nlabel">Carbs</div></div>
+              <div class="nutrition-item"><div class="nval">4g</div><div class="nlabel">Fat</div></div>
+              <div class="nutrition-item"><div class="nval">5.8mg</div><div class="nlabel">Iron</div></div>
+              <div class="nutrition-item"><div class="nval">120mg</div><div class="nlabel">Calcium</div></div>
+            </div>
+            <div class="flip-hint">Hover to flip back</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY HEALTHIVVA ============ -->
+  <section class="why-section" id="whySection">
+    <div class="bokeh-container" id="bokehContainer"></div>
+    <div class="section-heading">
+      <h2>Why <span class="accent">HEALTHIVVA</span>?</h2>
+      <p>Four pillars that define our commitment</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar">
+        <span class="pillar-icon">🌿</span>
+        <h3>100% Organic</h3>
+        <p>Grown without synthetic pesticides or fertilizers. Certified organic farming practices that are kind to the earth.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">💚</span>
+        <h3>Premium Grade</h3>
+        <p>Only the top 5% of each harvest makes the cut. Multi-stage sorting ensures uniform size, color, and quality.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🌾</span>
+        <h3>Farm Fresh</h3>
+        <p>Direct from farm to packaging. No middlemen, no warehousing delays — freshness you can taste in every bite.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">✓</span>
+        <h3>Quality Certified</h3>
+        <p>FSSAI approved, ISO certified, and AGMARK graded. Every batch is lab-tested for purity and safety.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NUTRITION FACTS ============ -->
+  <section class="nutrition-section" id="nutritionSection">
+    <div class="section-heading">
+      <h2>Packed with <span class="accent">Goodness</span></h2>
+      <p>Nutritional value per serving</p>
+    </div>
+    <!-- SVG Gradient Definition -->
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#5CB83A" />
+          <stop offset="100%" style="stop-color:#D4A017" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="nutrition-charts">
+      <div class="chart-item" data-percent="67">
+        <div class="chart-svg">
+          <svg viewBox="0 0 140 140" width="160" height="160">
+            <circle class="track" cx="70" cy="70" r="65" />
+            <circle class="fill" cx="70" cy="70" r="65" />
+          </svg>
+          <div class="chart-value">20g</div>
+        </div>
+        <div class="chart-label">Protein</div>
+        <div class="chart-sub">per serving</div>
+      </div>
+      <div class="chart-item" data-percent="40">
+        <div class="chart-svg">
+          <svg viewBox="0 0 140 140" width="160" height="160">
+            <circle class="track" cx="70" cy="70" r="65" />
+            <circle class="fill" cx="70" cy="70" r="65" />
+          </svg>
+          <div class="chart-value">12g</div>
+        </div>
+        <div class="chart-label">Fiber</div>
+        <div class="chart-sub">per serving</div>
+      </div>
+      <div class="chart-item" data-percent="15">
+        <div class="chart-svg">
+          <svg viewBox="0 0 140 140" width="160" height="160">
+            <circle class="track" cx="70" cy="70" r="65" />
+            <circle class="fill" cx="70" cy="70" r="65" />
+          </svg>
+          <div class="chart-value">15%</div>
+        </div>
+        <div class="chart-label">Iron</div>
+        <div class="chart-sub">daily value</div>
+      </div>
+      <div class="chart-item" data-percent="8">
+        <div class="chart-svg">
+          <svg viewBox="0 0 140 140" width="160" height="160">
+            <circle class="track" cx="70" cy="70" r="65" />
+            <circle class="fill" cx="70" cy="70" r="65" />
+          </svg>
+          <div class="chart-value">8%</div>
+        </div>
+        <div class="chart-label">Calcium</div>
+        <div class="chart-sub">daily value</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FARM TO TABLE TIMELINE ============ -->
+  <section class="timeline-section" id="timelineSection">
+    <div class="section-heading">
+      <h2>Farm to <span class="accent">Table</span> Journey</h2>
+      <p>Every step, handled with care</p>
+    </div>
+    <div class="timeline-track" id="timelineTrack">
+      <div class="timeline-line"><div class="timeline-line-fill" id="timelineFill"></div></div>
+      <div class="timeline-step" data-step="1">
+        <div class="timeline-icon">🌱</div>
+        <h4>Farming</h4>
+        <p>Organic farms across Rajasthan &amp; MP</p>
+      </div>
+      <div class="timeline-step" data-step="2">
+        <div class="timeline-icon">🌾</div>
+        <h4>Harvesting</h4>
+        <p>Hand-picked at peak maturity</p>
+      </div>
+      <div class="timeline-step" data-step="3">
+        <div class="timeline-icon">💧</div>
+        <h4>Cleaning</h4>
+        <p>Triple-wash purification process</p>
+      </div>
+      <div class="timeline-step" data-step="4">
+        <div class="timeline-icon">⚙️</div>
+        <h4>Processing</h4>
+        <p>State-of-the-art FSSAI facility</p>
+      </div>
+      <div class="timeline-step" data-step="5">
+        <div class="timeline-icon">📦</div>
+        <h4>Packaging</h4>
+        <p>Sealed for freshness &amp; safety</p>
+      </div>
+      <div class="timeline-step" data-step="6">
+        <div class="timeline-icon">🏠</div>
+        <h4>Your Kitchen</h4>
+        <p>Ready to cook &amp; enjoy!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-heading">
+      <h2>Loved by <span class="accent">Thousands</span></h2>
+      <p>What our customers say</p>
+    </div>
+    <div class="testimonial-track">
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">👩‍🍳</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <blockquote>"The Kabuli Chana is incredibly fresh. My chole have never tasted this good — it's like cooking with farm-fresh produce every single time."</blockquote>
+        <div class="tname">Priya Sharma</div>
+        <div class="tlocation">Mumbai, Maharashtra</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">👨‍💼</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <blockquote>"As a health-conscious family, we trust HEALTHIVVA for purity. The protein content is genuinely higher than other brands we've tried."</blockquote>
+        <div class="tname">Rajesh Patel</div>
+        <div class="tlocation">Ahmedabad, Gujarat</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">👩‍⚕️</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <blockquote>"I recommend HEALTHIVVA to my patients. The quality is consistent, genuinely organic, and the nutritional profile is excellent for balanced diets."</blockquote>
+        <div class="tname">Dr. Anita Kulkarni</div>
+        <div class="tlocation">Pune, Maharashtra</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer-section">
+    <div class="footer-logo">HEALTH<span>IVVA</span></div>
+    <div class="footer-tagline">NATURE'S CHOICE</div>
+    <div class="footer-divider"></div>
+    <div class="footer-tagline2">Premium Seeds &amp; Pulses</div>
+    <div class="social-links">
+      <a class="social-link" href="#" aria-label="Facebook">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a class="social-link" href="#" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a class="social-link" href="#" aria-label="Twitter">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a class="social-link" href="#" aria-label="YouTube">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 4z"/></svg>
+      </a>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 HEALTHIVVA™ — Nature's Choice. All rights reserved. | Premium Chickpeas &amp; Pulses since 1975.
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ===== CUSTOM CURSOR ===== */
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', function (e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = mouseX - 4 + 'px';
+      cursorDot.style.top = mouseY - 4 + 'px';
+    });
+
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      cursorRing.style.left = ringX - 20 + 'px';
+      cursorRing.style.top = ringY - 20 + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Hover effects
+    document.querySelectorAll('a, button, .product-card, .social-link, .pillar').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { cursorRing.classList.add('hover'); });
+      el.addEventListener('mouseleave', function () { cursorRing.classList.remove('hover'); });
+    });
+
+    /* ===== PRELOADER ===== */
+    var preloaderLogo = document.getElementById('preloaderLogo');
+    var preloaderSub = document.getElementById('preloaderSub');
+    var preloaderBar = document.getElementById('preloaderBar');
+    var preloader = document.getElementById('preloader');
+
+    var preloadTl = gsap.timeline();
+    preloadTl
+      .to(preloaderLogo, { opacity: 1, duration: 0.6, ease: 'power2.out' })
+      .to(preloaderSub, { opacity: 1, duration: 0.4, ease: 'power2.out' }, '-=0.2')
+      .to(preloaderBar, { width: '100%', duration: 1.2, ease: 'power2.inOut' }, '-=0.3')
+      .to(preloader, {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in',
+        onComplete: function () {
+          preloader.classList.add('hidden');
+          startHeroAnimations();
+        }
+      }, '+=0.3');
+
+    /* ===== THREE.JS HERO PARTICLES ===== */
+    var heroCanvas = document.getElementById('hero-canvas');
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 30;
+
+    var renderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Chickpea-like particles (icospheres with warm green/beige colors)
+    var particles = [];
+    var particleCount = 50;
+    var colors = [0xD4A017, 0xC4953A, 0xE8D5A3, 0x5CB83A, 0xB5A642];
+
+    for (var i = 0; i < particleCount; i++) {
+      var geometry = new THREE.IcosahedronGeometry(
+        0.3 + Math.random() * 0.6,
+        1
+      );
+      var material = new THREE.MeshStandardMaterial({
+        color: colors[Math.floor(Math.random() * colors.length)],
+        roughness: 0.6,
+        metalness: 0.2,
+        transparent: true,
+        opacity: 0.7 + Math.random() * 0.3
+      });
+      var mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(
+        (Math.random() - 0.5) * 50,
+        (Math.random() - 0.5) * 30,
+        (Math.random() - 0.5) * 20
+      );
+      mesh.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+      );
+      mesh.userData = {
+        speedX: (Math.random() - 0.5) * 0.005,
+        speedY: (Math.random() - 0.5) * 0.005,
+        speedRotX: (Math.random() - 0.5) * 0.01,
+        speedRotY: (Math.random() - 0.5) * 0.01
+      };
+      scene.add(mesh);
+      particles.push(mesh);
+    }
+
+    // Lighting
+    var ambientLight = new THREE.AmbientLight(0x5CB83A, 0.4);
+    scene.add(ambientLight);
+
+    var pointLight = new THREE.PointLight(0xD4A017, 1.2, 100);
+    pointLight.position.set(10, 10, 20);
+    scene.add(pointLight);
+
+    var pointLight2 = new THREE.PointLight(0x5CB83A, 0.8, 80);
+    pointLight2.position.set(-15, -5, 15);
+    scene.add(pointLight2);
+
+    // Mouse interaction
+    var heroMouseX = 0, heroMouseY = 0;
+    document.addEventListener('mousemove', function (e) {
+      heroMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      heroMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+      for (var j = 0; j < particles.length; j++) {
+        var p = particles[j];
+        p.rotation.x += p.userData.speedRotX;
+        p.rotation.y += p.userData.speedRotY;
+        p.position.x += p.userData.speedX;
+        p.position.y += p.userData.speedY;
+        // Gentle drift
+        if (p.position.x > 28 || p.position.x < -28) p.userData.speedX *= -1;
+        if (p.position.y > 18 || p.position.y < -18) p.userData.speedY *= -1;
+      }
+      // Mouse parallax on camera
+      camera.position.x += (heroMouseX * 3 - camera.position.x) * 0.02;
+      camera.position.y += (-heroMouseY * 2 - camera.position.y) * 0.02;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    }
+    animateThree();
+
+    window.addEventListener('resize', function () {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    /* ===== HERO ANIMATIONS ===== */
+    function startHeroAnimations() {
+      var heroTl = gsap.timeline();
+
+      // Letters appear
+      heroTl.to('.hero-brand .letter', {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        duration: 0.7,
+        stagger: 0.06,
+        ease: 'back.out(1.7)'
+      });
+
+      // Tagline
+      heroTl.to('#heroTagline', {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, '-=0.2');
+
+      // Typewriter effect
+      var typewriterText = "Nature's Finest, Packed with Goodness";
+      var twEl = document.getElementById('typewriter');
+      var charIndex = 0;
+      heroTl.add(function () {
+        function typeChar() {
+          if (charIndex < typewriterText.length) {
+            twEl.textContent += typewriterText.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeChar, 50);
+          }
+        }
+        typeChar();
+      }, '-=0.1');
+
+      // Scroll indicator
+      heroTl.to('#scrollIndicator', {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, '+=0.8');
+    }
+
+    /* ===== GSAP SCROLL TRIGGER ===== */
+    gsap.registerPlugin(ScrollTrigger);
+
+    // --- Horizontal Scroll for Brand Story ---
+    var wrapper = document.getElementById('horizontalWrapper');
+    var panels = wrapper.querySelectorAll('.hs-panel');
+
+    gsap.to(wrapper, {
+      x: function () { return -(wrapper.scrollWidth - window.innerWidth); },
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#brandStory',
+        pin: true,
+        scrub: 1,
+        end: function () { return '+=' + wrapper.scrollWidth; },
+        invalidateOnRefresh: true
+      }
+    });
+
+    // Counter animations
+    var counters = document.querySelectorAll('.counter-num');
+    counters.forEach(function (counter) {
+      var target = parseInt(counter.getAttribute('data-target'));
+      var textVal = counter.getAttribute('data-text');
+      ScrollTrigger.create({
+        trigger: counter,
+        start: 'top 80%',
+        once: true,
+        onEnter: function () {
+          if (textVal) {
+            counter.textContent = textVal;
+          } else {
+            gsap.to({ val: 0 }, {
+              val: target,
+              duration: 2,
+              ease: 'power2.out',
+              onUpdate: function () {
+                counter.textContent = Math.round(this.targets()[0].val) + '+';
+              }
+            });
+          }
+        }
+      });
+    });
+
+    // --- Product cards entrance ---
+    gsap.from('.product-card', {
+      y: 60,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.products-grid',
+        start: 'top 80%'
+      }
+    });
+
+    // 3D tilt on product cards
+    document.querySelectorAll('.product-card').forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var centerX = rect.width / 2;
+        var centerY = rect.height / 2;
+        var rotateX = (y - centerY) / centerY * -8;
+        var rotateY = (x - centerX) / centerX * 8;
+        card.querySelector('.product-card-inner').style.transform =
+          'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+      });
+      card.addEventListener('mouseleave', function () {
+        card.querySelector('.product-card-inner').style.transform = '';
+      });
+    });
+
+    // --- Why HEALTHIVVA pillars ---
+    gsap.to('.pillar', {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      stagger: 0.15,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.pillars-grid',
+        start: 'top 80%'
+      }
+    });
+
+    // Bokeh particles
+    var bokehContainer = document.getElementById('bokehContainer');
+    for (var b = 0; b < 15; b++) {
+      var bokeh = document.createElement('div');
+      bokeh.className = 'bokeh';
+      var size = 40 + Math.random() * 120;
+      bokeh.style.width = size + 'px';
+      bokeh.style.height = size + 'px';
+      bokeh.style.left = Math.random() * 100 + '%';
+      bokeh.style.top = Math.random() * 100 + '%';
+      bokeh.style.animationDelay = Math.random() * 5 + 's';
+      bokeh.style.animationDuration = 6 + Math.random() * 6 + 's';
+      bokehContainer.appendChild(bokeh);
+    }
+
+    // --- Nutrition Charts ---
+    var chartItems = document.querySelectorAll('.chart-item');
+    var circumference = 2 * Math.PI * 65; // r=65
+
+    chartItems.forEach(function (item) {
+      var percent = parseInt(item.getAttribute('data-percent'));
+      var fillEl = item.querySelector('.fill');
+      fillEl.style.strokeDasharray = circumference;
+      fillEl.style.strokeDashoffset = circumference;
+
+      ScrollTrigger.create({
+        trigger: item,
+        start: 'top 85%',
+        once: true,
+        onEnter: function () {
+          var offset = circumference - (circumference * percent / 100);
+          gsap.to(fillEl, {
+            strokeDashoffset: offset,
+            duration: 1.5,
+            ease: 'power2.out'
+          });
+        }
+      });
+    });
+
+    // --- Timeline ---
+    var timelineSteps = document.querySelectorAll('.timeline-step');
+    var timelineFill = document.getElementById('timelineFill');
+
+    gsap.to(timelineFill, {
+      width: '100%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#timelineSection',
+        start: 'top 60%',
+        end: 'bottom 60%',
+        scrub: 1
+      }
+    });
+
+    timelineSteps.forEach(function (step, index) {
+      gsap.to(step, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#timelineSection',
+          start: 'top ' + (70 - index * 5) + '%',
+          once: true,
+          onEnter: function () {
+            step.classList.add('active');
+          }
+        }
+      });
+    });
+
+    // --- Testimonials ---
+    gsap.to('.testimonial-card', {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      duration: 0.7,
+      stagger: 0.2,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.testimonial-track',
+        start: 'top 80%'
+      }
+    });
+
+    // --- Section headings fade in ---
+    document.querySelectorAll('.section-heading').forEach(function (heading) {
+      gsap.from(heading, {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: heading,
+          start: 'top 85%'
+        }
+      });
+    });
+
+  })();
+  </script>
+</body>
+</html>
